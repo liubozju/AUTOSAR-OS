@@ -95,7 +95,7 @@ void InitOS( void ) {
 	OsTaskVarType *tmpPcbPtr;
 	OsIsrStackType intStack;
 
-	init_os_called = 1;
+	init_os_called = 1;		//初始化标记设置为1	说明已经初始化了。但是这个标记没有被使用?
 
 	Os_CfgValidate();
 
@@ -104,7 +104,7 @@ void InitOS( void ) {
 	/* Clear sys */
 	memset(&Os_Sys,0,sizeof(Os_SysType));
 
-	Os_ArchInit();
+	Os_ArchInit();			//架构初始化---目前是空函数  不用做什么工作
 
 	/* Get the numbers defined in the editor */
 	Os_Sys.isrCnt = OS_ISR_CNT;
@@ -119,7 +119,7 @@ void InitOS( void ) {
 
 	// Calc interrupt stack
 	Os_IsrGetStackInfo(&intStack);
-	// TODO: 16 is arch dependent
+	// TODO: 16 is arch dependent  栈是LIFO  是一般是向下增长的   top是数据增删的单元
 	Os_Sys.intStack = (void *)((size_t)intStack.top + (size_t)intStack.size - 16);
 
 	// Init counter.. with alarms and schedule tables
@@ -246,12 +246,12 @@ static void os_start( void ) {
 }
 #endif
 
-#define TEST_DATA  0x12345
+#define TEST_DATA  0x12345		//define的变量在预处理的时候就会被替换掉
 #define TEST_SDATA2	0x3344
-volatile uint32_t test_data = TEST_DATA;
-volatile uint32_t test_bss = 0;
-volatile uint32_t test_bss_array[3];
-volatile uint32_t test_data_array[3] = {TEST_DATA,TEST_DATA,TEST_DATA};
+volatile uint32_t test_data = TEST_DATA;	//已初始化的全局变量，存储在rwdata  .data中
+volatile uint32_t test_bss = 0;				//初始化为0的全局变量，存储在bss段
+volatile uint32_t test_bss_array[3];		//未初始化的全局变量  存储在bss段
+volatile uint32_t test_data_array[3] = {TEST_DATA,TEST_DATA,TEST_DATA};	//已初始化的全局变量，存储在rwdata  .data中
 
 /* Define if compiler is set to use small data section */
 /* #define CC_USE_SMALL_DATA */
@@ -299,7 +299,7 @@ int main( void )
 
 	/* .data */
 	for(int i=0;i<3;i++ ) {
-		if( test_data_array[i] != TEST_DATA) {
+		if( test_data_array[i] != TEST_DATA) {		/*用于检查链接脚本是否执行正确，主要是地址是否正确*/
 			BAD_LINK_FILE();
 		}
 	}

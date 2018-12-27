@@ -279,7 +279,7 @@ void Os_Isr_cm3( int16_t vector ) {
 /*-----------------------------------------------------------------*/
 
 void Os_IsrGetStackInfo( OsIsrStackType *stack ) {
-	stack->top = Os_IsrStack;
+	stack->top = Os_IsrStack;				//Os_IsrStack是静态定义的512个字节的数组，作为ISR的堆栈区
 	stack->size = sizeof(Os_IsrStack);
 }
 

@@ -241,7 +241,7 @@ StatusType ReleaseResource( ResourceType ResID) {
 			rv = E_OS_ID;
 			goto err;
 		}
-		rPtr = Os_ResourceGet(ResID);
+		rPtr = Os_ResourceGet(ResID);		//??????
 	}
 
 	/* Check for invalid configuration */

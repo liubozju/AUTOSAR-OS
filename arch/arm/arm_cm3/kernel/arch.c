@@ -29,7 +29,7 @@ void Os_ArchFirstCall( void )
 {
 	// TODO: make switch here... for now just call func.
 	Irq_Enable();
-	Os_Sys.currTaskPtr->constPtr->entry();
+	Os_Sys.currTaskPtr->constPtr->entry();		//调用函数进入任务入口
 }
 
 void *Os_ArchGetStackPtr( void ) {

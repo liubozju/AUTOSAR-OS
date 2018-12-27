@@ -90,20 +90,20 @@ StatusType WaitSemaphore( OsSemaphoreType *semPtr, TickType tmo ) {
 	pcbPtr = Os_SysTaskGetCurr();
 	assert(Os_Sys.intNestCnt == 0 );
 
-	if (pcbPtr->constPtr->proc_type != PROC_EXTENDED) {
+	if (pcbPtr->constPtr->proc_type != PROC_EXTENDED) {		//扩展任务才可以等待信号量
 		return E_OS_ACCESS;
 	}
 
-	if(semPtr->val < 0 ) {
+	if(semPtr->val < 0 ) {						//没有可用信号量
 		/* To WAITING state */
-		if( tmo == 0 ) {
+		if( tmo == 0 ) {						//等待时间为0
 			/* Failed to acquire the semaphore */
 			rv = E_NOT_OK;
 		} else {
 			/* Add this task to the semaphore */
 			STAILQ_INSERT_TAIL(&semPtr->taskHead,pcbPtr,semEntry);
 
-			Os_Dispatch(OP_WAIT_SEMAPHORE);
+			Os_Dispatch(OP_WAIT_SEMAPHORE);		//进行任务调度
 		}
 	} else {
 		/* We got the semaphore */
@@ -191,7 +191,7 @@ StatusType CreateMutex( OsMutexType *mutexPtr ) {
 /**
  *
  * @param mutexPtr
- * @return
+ * @return   感觉没有写完
  */
 
 StatusType WaitMutex( OsMutexType *mutexPtr ) {

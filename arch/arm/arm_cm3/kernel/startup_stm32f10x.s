@@ -55,9 +55,9 @@ CopyDataInit:
 LoopCopyDataInit:
 	adds	r2, r0, r1        /* are we at the final position? */
 	cmp	r2, r3                /* ... */
-	bcc	CopyDataInit          /* nope, continue */
+	bcc	CopyDataInit          /* nope, continue   将代码从代码区拷贝到sram*/
 	ldr	r2, =_sbss
-	b	LoopFillZerobss
+	b	LoopFillZerobss			/*清除BSS段*/
 
 /* Zero fill the bss segment. */  
 FillZerobss:
@@ -69,8 +69,8 @@ LoopFillZerobss:
 	cmp	r2, r3
 	bcc	FillZerobss
 /* Call the application's entry point.*/
-	bl	main
-	bx	lr    
+	bl	main		/**跳转到main函数，bl  在跳转前将返回地址写入到lr中*/
+	bx	lr    		/*带状态切换的跳转。最低位为1时，切换到Thumb指令执行，为0时，解释为ARM指令执行。*/
 .size	Reset_Handler, .-Reset_Handler
 
 /**

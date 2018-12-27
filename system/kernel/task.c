@@ -104,7 +104,7 @@ static inline void Os_TaskMakeSuspended( OsTaskVarType *pcb )
 
 
 /** @req OS067 */
-
+/*判断当前任务的任务PID是否正确*/
 _Bool os_pcb_pid_valid( OsTaskVarType *restrict pcb ) {
 	return ( pcb->constPtr->pid > OS_TASK_CNT ) ? 0 : 1;
 }
@@ -141,14 +141,14 @@ void Os_TaskStartExtended( void ) {
 	 *    OS052, OS069, OS070 and OS239
 	 * */
 
-	/** @req OS239 */
+	/** @req OS239 *///在上面的函数中会调用函数entry进入函数入口执行。接下来的函数是在终止函数之前会进行的一些操作
 	Irq_Disable();
-	if( Os_SysIntAnyDisabled() ) {
+	if( Os_SysIntAnyDisabled() ) {		//查看是否有等待处理的中断，如果有清除
 		Os_SysIntClearAll();
 	}
 
 	/** @req OS070 */
-	if( Os_TaskOccupiesResources(pcb) ) {
+	if( Os_TaskOccupiesResources(pcb) ) {	//清除该任务占用的所有资源
 		Os_TaskResourceFreeAll(pcb);
 	}
 
