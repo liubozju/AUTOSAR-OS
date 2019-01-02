@@ -70,7 +70,7 @@ extern uint32_t McuE_GetSystemClock( void );
 
 
 /**
- * Copy rom pcb data(r_pcb) to ram data
+ * Copy rom pcb data(r_pcb) to ram data    和存储区相关？不是很清楚
  *
  * @param 	pcb		ram data
  * @param 	r_pcb	rom data
@@ -107,12 +107,12 @@ void InitOS( void ) {
 	Os_ArchInit();			//架构初始化---目前是空函数  不用做什么工作
 
 	/* Get the numbers defined in the editor */
-	Os_Sys.isrCnt = OS_ISR_CNT;
+	Os_Sys.isrCnt = OS_ISR_CNT;		//中断数量
 
 	// Assign pcb list and init ready queue
 	Os_Sys.pcb_list = Os_TaskVarList;
-	TAILQ_INIT(& Os_Sys.ready_head);
-//	TAILQ_INIT(& Os_Sys.pcb_head);
+	TAILQ_INIT(& Os_Sys.ready_head);	//就绪列表初始化，将链表首尾节点指针置空
+//	TAILQ_INIT(& Os_Sys.pcb_head);		//对于pcb head  和  timer head 是类似于ready_head的做法。
 #if defined(USE_KERNEL_EXTRA)
 	TAILQ_INIT(& Os_Sys.timerHead);
 #endif
@@ -124,10 +124,10 @@ void InitOS( void ) {
 
 	// Init counter.. with alarms and schedule tables
 #if OS_COUNTER_CNT!=0
-	Os_CounterInit();
+	Os_CounterInit();			//counter初始化对应的alarm 和调度表
 #endif
 #if OS_SCHTBL_CNT!=0
-	Os_SchTblInit();
+	Os_SchTblInit();			//获取调度表，并针对每一个调度表判断参数
 #endif
 
 	// Put all tasks in the pcb list
@@ -137,8 +137,8 @@ void InitOS( void ) {
 	for( i=0; i < OS_TASK_CNT; i++) {
 		tmpPcbPtr = Os_TaskGet(i);
 
-		copyPcbParts(tmpPcbPtr,&Os_TaskConstList[i]);
-		Os_TaskContextInit(tmpPcbPtr);
+		copyPcbParts(tmpPcbPtr,&Os_TaskConstList[i]);		//这句话的意思是什么？为什么要这么做
+		Os_TaskContextInit(tmpPcbPtr);						//
 		TAILQ_INIT(&tmpPcbPtr->resourceHead);
 
 #if 0
@@ -148,7 +148,7 @@ void InitOS( void ) {
 		DEBUG(DEBUG_LOW,"pid:%d name:%s prio:%d\n",tmpPcbPtr->pid,tmpPcbPtr->name,tmpPcbPtr->prio);
 	}
 
-	Os_ResourceInit();
+	Os_ResourceInit();		//进行资源的初始化，主要是调度器的资源初始化。（设置调度器的优先级、ID等等）
 
 	// Now all tasks should be created.
 }
@@ -174,7 +174,7 @@ static void os_start( void ) {
 
 #if	(OS_USE_APPLICATIONS == STD_ON)
 	/* Start applications */
-	Os_ApplStart();
+	Os_ApplStart();			//应用和任务一样都是静态定义的，存储在一个数组内部，这里将应用进行初始化，设置应用的状态以及运行hook函数
 #endif
 
 

@@ -217,7 +217,7 @@ typedef struct OsTaskConst {
 /* ----------------------------[function prototypes]-------------------------*/
 
 extern OsTaskVarType Os_TaskVarList[OS_TASK_CNT];
-extern GEN_TASK_HEAD;
+extern GEN_TASK_HEAD;	//#define GEN_TASK_HEAD const OsTaskConstType  Os_TaskConstList[OS_TASK_CNT]
 
 
 /**

@@ -88,7 +88,7 @@ StatusType WaitSemaphore( OsSemaphoreType *semPtr, TickType tmo ) {
 	--semPtr->val;
 
 	pcbPtr = Os_SysTaskGetCurr();
-	assert(Os_Sys.intNestCnt == 0 );
+	assert(Os_Sys.intNestCnt == 0 );		//确认中断嵌套数量为0
 
 	if (pcbPtr->constPtr->proc_type != PROC_EXTENDED) {		//扩展任务才可以等待信号量
 		return E_OS_ACCESS;

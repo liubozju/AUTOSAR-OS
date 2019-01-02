@@ -254,14 +254,14 @@ static void Os_TaskSetEntry(OsTaskVarType *pcbPtr ) {
  */
 void Os_TaskContextInit( OsTaskVarType *pcb ) {
 
-	if( pcb->constPtr->autostart ) {
+	if( pcb->constPtr->autostart ) {		//如果设置了自动启动标记---将任务加入就绪表
 		Os_TaskMakeReady(pcb);
 	} else {
-		pcb->state = ST_SUSPENDED;
+		pcb->state = ST_SUSPENDED;			//挂起任务
 	}
 
-	Os_StackSetup(pcb);
-	Os_StackFill(pcb);
+	Os_StackSetup(pcb);						//为任务堆栈设置大小以及栈底指针
+	Os_StackFill(pcb);						//堆栈区填充
 	Os_ArchSetTaskEntry(pcb);
 
 	Os_ArchSetupContext(pcb);

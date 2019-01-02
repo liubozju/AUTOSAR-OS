@@ -230,7 +230,7 @@ TickType GetOsTick( void ) {
 
 
 /**
- * Initialize alarms and schedule-tables for the counters
+ * Initialize alarms and schedule-tables for the counters  初始化计数器的警报和计划表
  */
 void Os_CounterInit( void ) {
 #if OS_ALARM_CNT!=0
@@ -247,7 +247,7 @@ void Os_CounterInit( void ) {
 	}
 #endif
 
-#if OS_SCHTBL_CNT!=0
+#if OS_SCHTBL_CNT!=0			//调度表的资源初始化方式和ALARM是一样的。都是和对应的counter绑定到一起
 	{
 		OsCounterType *cPtr;
 		OsSchTblType *sPtr;
